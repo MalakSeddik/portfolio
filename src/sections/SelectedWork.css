@@ -2,6 +2,44 @@
   margin-top: var(--space-md);
 }
 
+/* Positioning context for the edge fades. The fades are pseudo-elements
+   here rather than a mask on the viewport so they can't clip the viewport's
+   focus outline, and pointer-events: none keeps clicks/swipes going through. */
+.carousel__frame {
+  position: relative;
+  /* Matches the slide width formula below: the visible sliver of the
+     next card, so a fade covers only the peek and never a full card. */
+  --peek-width: calc((100% - var(--space-sm)) / 11);
+}
+
+.carousel__frame::before,
+.carousel__frame::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  width: var(--peek-width);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.carousel__frame::before {
+  left: 0;
+  background: linear-gradient(to left, transparent, var(--color-bg));
+}
+
+.carousel__frame::after {
+  right: 0;
+  background: linear-gradient(to right, transparent, var(--color-bg));
+}
+
+.carousel__frame[data-fade-start="true"]::before,
+.carousel__frame[data-fade-end="true"]::after {
+  opacity: 1;
+}
+
 .carousel__viewport {
   overflow-x: auto;
   /* Not hidden: overflow-x: auto paired with overflow-y: hidden on the same
@@ -44,41 +82,41 @@
 
 .carousel__slide {
   flex: 0 0 auto;
-  /* ~1.7 cards visible on desktop, so the next one visibly peeks in. */
-  width: 60%;
+  /* One full card plus a peek of the next that is 10% of a card wide:
+     card + gap + 0.1 * card = 100%. Keep --peek-width above in sync. */
+  width: calc((100% - var(--space-sm)) / 1.1);
   scroll-snap-align: start;
-}
-
-@media (max-width: 720px) {
-  .carousel__slide {
-    /* One card, with a clear peek of the next. */
-    width: 85%;
-  }
 }
 
 .carousel__controls {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-sm);
-  margin-top: var(--space-md);
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
 }
 
+/* Thin-bordered circle with a stroked chevron. Hover darkens the border
+   and adds the faintest surface tint; no fill, no shadow. */
 .carousel__arrow {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  font-size: var(--text-lg);
-  line-height: 1;
+  width: 36px;
+  height: 36px;
+  padding: 0;
   color: var(--color-text);
   background: transparent;
   border: var(--border-width) solid var(--color-border-strong);
-  border-radius: var(--radius-sm);
+  border-radius: 50%;
   cursor: pointer;
   transition: background var(--transition-fast), border-color var(--transition-fast),
     opacity var(--transition-fast);
+}
+
+.carousel__arrow svg {
+  width: 16px;
+  height: 16px;
 }
 
 .carousel__arrow:hover:not(:disabled) {
@@ -86,43 +124,61 @@
   border-color: var(--color-text);
 }
 
+.carousel__arrow:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 .carousel__arrow:disabled {
-  opacity: 0.35;
+  opacity: 0.3;
   cursor: default;
 }
 
 .carousel__dots {
   display: flex;
   align-items: center;
-  gap: var(--space-2xs);
 }
 
+/* The button is a 24px-tall hit target; the visible mark is ::before.
+   Inactive: a small muted dot. Active: widens into a short accent bar. */
 .carousel__dot {
-  width: 8px;
-  height: 8px;
-  padding: 0;
-  border: var(--border-width) solid var(--color-border-strong);
-  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  padding: 0 4px;
+  border: none;
   background: transparent;
   cursor: pointer;
-  transition: background var(--transition-fast), border-color var(--transition-fast),
-    transform var(--transition-fast);
 }
 
-.carousel__dot:hover {
-  border-color: var(--color-text);
+.carousel__dot::before {
+  content: "";
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-border-strong);
+  transition: width 150ms ease, background-color 150ms ease;
 }
 
-.carousel__dot[data-active="true"] {
+.carousel__dot:hover::before {
+  background: var(--color-text-muted);
+}
+
+.carousel__dot[data-active="true"]::before {
+  width: 20px;
   background: var(--color-accent);
-  border-color: var(--color-accent);
-  transform: scale(1.3);
 }
 
-.carousel__counter {
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  min-width: 3.5ch;
-  text-align: center;
+.carousel__dot:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 0;
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel__dot::before {
+    transition: none;
+  }
 }

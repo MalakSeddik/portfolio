@@ -16,11 +16,6 @@
   gap: var(--space-sm);
 }
 
-.hero__prompt {
-  color: var(--color-accent);
-  margin-right: var(--space-3xs);
-}
-
 .hero__name {
   font-size: var(--text-3xl);
 }

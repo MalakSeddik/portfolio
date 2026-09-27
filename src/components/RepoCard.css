@@ -1,4 +1,7 @@
 .repo-card {
+  /* Grid item: without this its automatic min-width is its content's
+     width, so one long token could push the card past its column. */
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-2xs);
@@ -16,18 +19,32 @@
   background: var(--color-surface-hover);
 }
 
+/* Wraps so a long name gets the full card width and the language tag
+   drops to its own line, rather than the tag squeezing the name into a
+   narrow column that breaks on every underscore. */
 .repo-card__header {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: var(--space-xs);
+  gap: var(--space-2xs) var(--space-xs);
 }
 
+/* Repo names are long unbroken tokens (snake_case, kebab-case). The
+   <wbr>s added in RepoCard.tsx make _ and - the preferred break points;
+   overflow-wrap: anywhere is the fallback for a name with neither. */
 .repo-card__name {
+  min-width: 0;
   font-size: var(--text-base);
   font-family: var(--font-mono);
+  overflow-wrap: anywhere;
+}
+
+.repo-card__header .tag {
+  flex-shrink: 0;
 }
 
 .repo-card__description {
   font-size: var(--text-sm);
+  overflow-wrap: break-word;
 }

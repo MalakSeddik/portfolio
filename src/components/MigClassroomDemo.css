@@ -1,20 +1,37 @@
+/* Sits in the project card's expanded panel, so it uses the same rhythm
+   as its siblings there (.project-card__note, __links in ProjectCard.css):
+   24px above, 40px inline padding so it aligns with the card's text. */
 .exam-demo {
-  margin-top: var(--space-sm);
-  padding-top: var(--space-md);
-  border-top: var(--border-width) solid var(--color-border);
+  padding: var(--space-sm) var(--space-md) 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  /* Tight on purpose: the "Live demo" eyebrow labels the disclosure
+     directly below it, not the card as a whole. */
+  gap: var(--space-2xs);
+}
+
+.exam-demo .section-kicker {
+  margin-bottom: 0;
+}
+
+/* Trigger and panel are one bordered box: the summary is its header row,
+   the timer block its body, separated by a hairline when open. The thin
+   accent rule on the left is the only use of the accent on the container. */
+.exam-demo__disclosure {
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-left: 2px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
 }
 
 .exam-demo__block {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2xs);
+  gap: var(--space-xs);
   padding: var(--space-sm);
   background: var(--color-bg);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-top: var(--border-width) solid var(--color-border);
 }
 
 .exam-demo__label {
@@ -69,7 +86,7 @@
 }
 
 .exam-demo__summary {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: var(--space-2xs);
   cursor: pointer;
@@ -77,11 +94,9 @@
   font-size: var(--text-sm);
   font-weight: 600;
   color: var(--color-text);
-  padding: var(--space-2xs) var(--space-sm);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-sm);
+  padding: var(--space-xs) var(--space-sm);
   list-style: none;
-  transition: background var(--transition-fast), border-color var(--transition-fast);
+  transition: background var(--transition-fast);
 }
 
 .exam-demo__summary::-webkit-details-marker,
@@ -91,16 +106,25 @@
 
 .exam-demo__summary:hover {
   background: var(--color-surface-hover);
-  border-color: var(--color-border-strong);
+}
+
+/* Inset, because the disclosure's overflow: hidden (needed so the hover
+   background follows the rounded corners) would clip an outside ring. */
+.exam-demo__summary:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
 }
 
 .exam-demo__summary-chevron {
-  color: var(--color-text-muted);
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--color-accent);
   transition: transform var(--transition-base);
 }
 
-.exam-demo__disclosure[open] .exam-demo__summary {
-  margin-bottom: var(--space-sm);
+.exam-demo__summary-chevron svg {
+  width: 14px;
+  height: 14px;
 }
 
 .exam-demo__disclosure[open] .exam-demo__summary-chevron {

@@ -66,6 +66,9 @@ export function ProjectCard({ project }: { project: Project }) {
         role="region"
         aria-labelledby={triggerId}
         aria-hidden={!expanded}
+        // Collapsed is only visually hidden (max-height: 0), so without
+        // inert the links and demo controls inside stay in the Tab order.
+        inert={!expanded}
       >
         <div className="project-card__panel-inner" ref={panelContentRef}>
           <ul className="project-card__highlights">
@@ -86,7 +89,7 @@ export function ProjectCard({ project }: { project: Project }) {
                 target="_blank"
                 rel="noopener"
               >
-                {project.link.label} {"↗"}
+                {project.link.label} <span aria-hidden="true">↗</span>
               </a>
             )}
             {project.links?.map((link) => (
@@ -97,7 +100,7 @@ export function ProjectCard({ project }: { project: Project }) {
                 target="_blank"
                 rel="noopener"
               >
-                {link.label} {"↗"}
+                {link.label} <span aria-hidden="true">↗</span>
               </a>
             ))}
           </div>

@@ -81,12 +81,7 @@ export function Hero() {
           HeroCodeTexture.css for the density mask that uses that margin). */}
       <HeroCodeTexture />
       <div className="hero__inner container">
-        <p className="section-kicker">
-          <span className="hero__prompt" aria-hidden="true">
-            $
-          </span>
-          {profile.location}
-        </p>
+        <p className="section-kicker">{profile.location}</p>
         <h1 className="hero__name">{profile.name}</h1>
         <p className="hero__role">{profile.title}</p>
         <p className="hero__focus">{profile.focus}</p>

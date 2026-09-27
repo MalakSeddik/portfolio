@@ -103,7 +103,9 @@ export function MigClassroomDemo() {
       <details className="exam-demo__disclosure">
         <summary className="exam-demo__summary">
           <span className="exam-demo__summary-chevron" aria-hidden="true">
-            ▸
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 3l5 5-5 5" />
+            </svg>
           </span>
           Try the exam timer
         </summary>

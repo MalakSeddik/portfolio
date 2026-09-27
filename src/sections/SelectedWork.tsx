@@ -12,6 +12,7 @@ export function SelectedWork() {
   const [activeIndex, setActiveIndex] = useState(0)
   const viewportRef = useRef<HTMLDivElement>(null)
   const slideRefs = useRef<(HTMLLIElement | null)[]>([])
+  const [edgeFade, setEdgeFade] = useState({ start: false, end: true })
 
   // Track whichever slide is most visible in the viewport — covers both
   // programmatic navigation (arrows/dots/keys) and manual scrolling (swipe,
@@ -48,6 +49,44 @@ export function SelectedWork() {
     })
 
     return () => observer.disconnect()
+  }, [])
+
+  // Fade an edge only while a card is actually cut off there. Based on
+  // geometry rather than scroll position alone: at a middle snap point the
+  // left edge sits flush with a fully visible card, which must not be dimmed.
+  useEffect(() => {
+    const viewport = viewportRef.current
+    if (!viewport) return
+
+    let frame = 0
+    function update() {
+      frame = 0
+      if (!viewport) return
+      const { left, right } = viewport.getBoundingClientRect()
+      let start = false
+      let end = false
+      for (const slide of slideRefs.current) {
+        if (!slide) continue
+        const rect = slide.getBoundingClientRect()
+        if (rect.left < left - 1 && rect.right > left + 1) start = true
+        if (rect.left < right - 1 && rect.right > right + 1) end = true
+      }
+      setEdgeFade((prev) =>
+        prev.start === start && prev.end === end ? prev : { start, end },
+      )
+    }
+    function schedule() {
+      if (!frame) frame = requestAnimationFrame(update)
+    }
+
+    update()
+    viewport.addEventListener("scroll", schedule, { passive: true })
+    window.addEventListener("resize", schedule)
+    return () => {
+      viewport.removeEventListener("scroll", schedule)
+      window.removeEventListener("resize", schedule)
+      if (frame) cancelAnimationFrame(frame)
+    }
   }, [])
 
   function goTo(index: number) {
@@ -101,29 +140,35 @@ export function SelectedWork() {
 
       <div className="carousel container">
         <div
-          className="carousel__viewport"
-          ref={viewportRef}
-          tabIndex={0}
-          role="region"
-          aria-roledescription="carousel"
-          aria-label="Selected work projects"
-          onKeyDown={handleKeyDown}
-          onWheel={handleWheel}
+          className="carousel__frame"
+          data-fade-start={edgeFade.start}
+          data-fade-end={edgeFade.end}
         >
-          <ul className="carousel__track">
-            {projects.map((project, index) => (
-              <li
-                className="carousel__slide"
-                key={project.id}
-                data-index={index}
-                ref={(el) => {
-                  slideRefs.current[index] = el
-                }}
-              >
-                <ProjectCard project={project} />
-              </li>
-            ))}
-          </ul>
+          <div
+            className="carousel__viewport"
+            ref={viewportRef}
+            tabIndex={0}
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Selected work projects"
+            onKeyDown={handleKeyDown}
+            onWheel={handleWheel}
+          >
+            <ul className="carousel__track">
+              {projects.map((project, index) => (
+                <li
+                  className="carousel__slide"
+                  key={project.id}
+                  data-index={index}
+                  ref={(el) => {
+                    slideRefs.current[index] = el
+                  }}
+                >
+                  <ProjectCard project={project} />
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <div className="carousel__controls">
@@ -134,7 +179,9 @@ export function SelectedWork() {
             disabled={activeIndex === 0}
             aria-label="Previous project"
           >
-            {"‹"}
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M10 3 5 8l5 5" />
+            </svg>
           </button>
 
           <div className="carousel__dots">
@@ -151,10 +198,6 @@ export function SelectedWork() {
             ))}
           </div>
 
-          <span className="carousel__counter" aria-hidden="true">
-            {activeIndex + 1} / {projects.length}
-          </span>
-
           <button
             type="button"
             className="carousel__arrow"
@@ -162,7 +205,9 @@ export function SelectedWork() {
             disabled={activeIndex === projects.length - 1}
             aria-label="Next project"
           >
-            {"›"}
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M6 3l5 5-5 5" />
+            </svg>
           </button>
         </div>
 

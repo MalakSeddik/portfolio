@@ -19,7 +19,7 @@ export function MoreRepos() {
         target="_blank"
         rel="noopener"
       >
-        Browse all {profile.githubRepoCount} repos on GitHub {"↗"}
+        Browse all {profile.githubRepoCount} repos on GitHub <span aria-hidden="true">↗</span>
       </a>
     </section>
   )

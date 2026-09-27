@@ -1,0 +1,114 @@
+/*
+  THEME — every visual decision for the site lives here as a CSS variable.
+  Change a value in this file and it updates everywhere at once.
+  global.css and the section stylesheets never hardcode a color, font, or
+  spacing value — they all read from these variables.
+
+  Current direction: editorial serif. Fraunces (display) + Inter (body),
+  loaded from Google Fonts via the <link> tags in index.html. Fraunces is a
+  variable font with an optical-size axis, so it sharpens automatically at
+  large display sizes and softens at small ones — no extra work needed.
+
+  To swap typefaces later: change the Google Fonts <link> in index.html,
+  then update the family name in --font-display / --font-body below. Keep a
+  real fallback stack after the web font so the page still reads correctly
+  before fonts load or if the request fails.
+*/
+
+:root {
+  /* ============================= FONTS ============================= */
+  /* --font-display: headings, name, section titles */
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  /* --font-body: paragraphs, nav, labels, buttons */
+  --font-body: "Inter", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  /* --font-mono: stack tags, code-like bits (kept monospace regardless of the direction above) */
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+  /* type scale — --text-base is the comfortable reading size (16-18px);
+     everything else is set relative to it. Nudge --text-3xl / --text-xl
+     to make headings feel bigger or smaller without touching every rule. */
+  --text-scale-ratio: 1.333;
+  --text-base: 1.125rem;                          /* 18px body */
+  --text-sm: 0.875rem;                             /* 14px small labels/tags/nav */
+  --text-lg: clamp(1.2rem, 1.1rem + 0.3vw, 1.35rem);   /* emphasized paragraphs */
+  --text-xl: clamp(1.75rem, 1.4rem + 1.4vw, 2.25rem);  /* section headings, hero role */
+  --text-2xl: clamp(2.25rem, 1.6rem + 2.8vw, 3.25rem); /* reserved for a future larger step */
+  --text-3xl: clamp(3rem, 2rem + 5vw, 5.5rem);         /* hero name — large, confident */
+
+  --leading-tight: 1.15;
+  --leading-normal: 1.6;
+
+  /* ============================= COLOR ============================== */
+  /* Small, deliberately limited palette. Every other color in the site
+     is derived from these — change these six and the whole site follows.
+     --color-accent (oxblood) is used sparingly on purpose: links, focus
+     rings, small marks. Nothing in global.css or the sections fills a
+     large area with it. */
+  --color-bg: #fbfaf7;
+  --color-surface: #ffffff;
+  --color-text: #1a1a1a;
+  --color-text-muted: #6b6b6b;
+  --color-border: #e4e2dc;
+  --color-accent: #7a2e2e;
+  /* text color to use on top of a --color-accent background */
+  --color-accent-contrast: #ffffff;
+  /* Cool charcoal-navy used only by the decorative hero code texture
+     (HeroCodeTexture.css) — deliberately not --color-text: a hue-shifted
+     dark reads as more "there" against the warm cream bg without needing
+     more opacity, which is capped by contrast math (see that file). */
+  --color-texture-ink: #232a35;
+
+  /* derived — used for hover/pressed states, don't hand-pick these,
+     they follow whatever --color-accent / --color-border are set to */
+  --color-border-strong: color-mix(in srgb, var(--color-border) 60%, var(--color-text));
+  --color-surface-hover: color-mix(in srgb, var(--color-surface) 92%, var(--color-text));
+
+  /* ============================ SPACING ============================= */
+  /* One base unit drives the whole spacing scale. Raise --space-unit for
+     a more spacious layout, lower it for a denser one. */
+  --space-unit: 8px;
+  --space-3xs: calc(var(--space-unit) * 0.5);  /* 4px */
+  --space-2xs: var(--space-unit);              /* 8px */
+  --space-xs: calc(var(--space-unit) * 2);     /* 16px */
+  --space-sm: calc(var(--space-unit) * 3);     /* 24px */
+  --space-md: calc(var(--space-unit) * 5);     /* 40px */
+  --space-lg: calc(var(--space-unit) * 8);     /* 64px */
+  --space-xl: calc(var(--space-unit) * 13);    /* 104px */
+  --space-2xl: calc(var(--space-unit) * 18);   /* 144px */
+
+  /* ============================ LAYOUT =============================== */
+  --content-max-width: 780px;
+  --page-gutter: var(--space-xs);
+
+  /* ========================= BORDERS / SHAPE ========================== */
+  /* Design rule: no filled pill buttons anywhere in this site. Buttons and
+     links are bordered or underlined, not solid rounded shapes. Keep
+     --radius small (or 0 for a sharp, technical look). --color-border is
+     a light hairline by design — lower its lightness/opacity to make
+     borders heavier, or move it closer to --color-bg to make them lighter. */
+  --border-width: 1px;
+  --radius-sm: 3px;
+  --radius-md: 6px;
+
+  /* ============================ ELEVATION ============================== */
+  /* Used only where something floats above the page (the command palette).
+     Derived from --color-text so it tints with the palette instead of being
+     a fixed gray. */
+  --shadow-modal: 0 20px 50px -12px color-mix(in srgb, var(--color-text) 35%, transparent);
+  --scrim: color-mix(in srgb, var(--color-text) 45%, transparent);
+
+  /* ============================= MOTION =============================== */
+  /* Kept intentionally minimal: short transitions on hover/focus only,
+     no animation triggered by scrolling or page load. */
+  --transition-fast: 120ms ease;
+  --transition-base: 200ms ease;
+}
+
+/* Respect the OS-level motion preference: collapse all transitions to
+   nothing rather than trying to pick "safer" replacement animations. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+    --transition-base: 0ms;
+  }
+}

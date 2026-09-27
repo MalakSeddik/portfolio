@@ -1,0 +1,24 @@
+.repos-grid {
+  display: grid;
+  /* minmax(0, 1fr), not bare 1fr: a bare 1fr track's minimum is `auto`, so
+     with fewer cards than columns the remaining populated column(s) can
+     get pulled wider by a card's own content (e.g. a long unbroken repo
+     name) instead of staying equal thirds. minmax(0, 1fr) keeps every
+     column an equal share regardless of how many cards are actually in
+     the grid, leaving any unused column as clean empty space rather than
+     a stretched card. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.repos__all-link {
+  font-size: var(--text-sm);
+  display: inline-block;
+}
+
+@media (max-width: 720px) {
+  .repos-grid {
+    grid-template-columns: 1fr;
+  }
+}

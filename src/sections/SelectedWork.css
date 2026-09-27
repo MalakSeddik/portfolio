@@ -1,0 +1,128 @@
+.carousel {
+  margin-top: var(--space-md);
+}
+
+.carousel__viewport {
+  overflow-x: auto;
+  /* Not hidden: overflow-x: auto paired with overflow-y: hidden on the same
+     element is what made some browsers redirect vertical wheel scrolling
+     onto this element's horizontal axis instead of scrolling the page.
+     overflow-y: visible means this element never claims the vertical axis
+     at all, so wheel/trackpad-down always scrolls the page like normal. */
+  overflow-y: visible;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  /* Stops a horizontal swipe that reaches either end of the track from
+     chaining into page navigation (back/forward) or any parent scroll. */
+  overscroll-behavior-x: contain;
+}
+
+.carousel__viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel__viewport:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel__viewport {
+    scroll-behavior: auto;
+  }
+}
+
+.carousel__track {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  margin: 0;
+  padding: 0;
+}
+
+.carousel__slide {
+  flex: 0 0 auto;
+  /* ~1.7 cards visible on desktop, so the next one visibly peeks in. */
+  width: 60%;
+  scroll-snap-align: start;
+}
+
+@media (max-width: 720px) {
+  .carousel__slide {
+    /* One card, with a clear peek of the next. */
+    width: 85%;
+  }
+}
+
+.carousel__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
+
+.carousel__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: var(--text-lg);
+  line-height: 1;
+  color: var(--color-text);
+  background: transparent;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast),
+    opacity var(--transition-fast);
+}
+
+.carousel__arrow:hover:not(:disabled) {
+  background: var(--color-surface-hover);
+  border-color: var(--color-text);
+}
+
+.carousel__arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.carousel__dots {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.carousel__dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.carousel__dot:hover {
+  border-color: var(--color-text);
+}
+
+.carousel__dot[data-active="true"] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  transform: scale(1.3);
+}
+
+.carousel__counter {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  min-width: 3.5ch;
+  text-align: center;
+}

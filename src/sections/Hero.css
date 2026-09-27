@@ -1,0 +1,71 @@
+.hero {
+  position: relative;
+  /* Establishes a local stacking context so the code texture's negative
+     z-index (see HeroCodeTexture.css) is scoped to just this section, and
+     clips the texture so it can't bleed into the sections below. Full width
+     on purpose (not `.container`) — the texture is a direct child of this
+     element so it has real margin outside the text column to sit in. */
+  z-index: 0;
+  overflow: hidden;
+  padding-block: var(--space-2xl) var(--space-xl);
+}
+
+.hero__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.hero__prompt {
+  color: var(--color-accent);
+  margin-right: var(--space-3xs);
+}
+
+.hero__name {
+  font-size: var(--text-3xl);
+}
+
+.hero__role {
+  font-size: var(--text-xl);
+  font-family: var(--font-display);
+  color: var(--color-text);
+}
+
+.hero__focus {
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+  margin-top: calc(var(--space-3xs) * -1);
+}
+
+.hero__summary {
+  max-width: 60ch;
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  margin-top: var(--space-2xs);
+}
+
+.hero__email-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2xs);
+}
+
+.hero__email-fallback {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.hero__email-text {
+  font-family: var(--font-mono);
+  color: var(--color-text);
+  background: var(--color-surface-hover);
+  padding: 1px var(--space-3xs);
+  border-radius: var(--radius-sm);
+}

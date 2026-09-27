@@ -1,0 +1,78 @@
+/* Purely decorative — a real code snippet shown as texture, not content.
+   Two densities, controlled by a mask (see the media query below):
+     - a safe, uniform density everywhere by default (also what mobile/
+       narrow viewports get, permanently — there's no real "empty margin"
+       to exploit once the text column fills the section width anyway)
+     - on wide screens, a much denser look in the real empty margins either
+       side of the 780px text column, fading down to that same safe density
+       wherever the column itself could be, so text never sits on more than
+       the safe level.
+
+   Contrast math (see HeroCodeTexture.css git history / task notes for the
+   full table): --color-texture-ink blended into --color-bg at 6% keeps
+   --color-text-muted body copy at ~4.58:1 (WCAG AA needs 4.5:1) and
+   --color-text headings at ~15:1 (needs 3:1, large text). 6% is that
+   *background* density value — see the mask math below for how the 18%
+   peak still resolves to 6% under the text column. */
+.hero-code-texture {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  gap: var(--space-2xl);
+  margin: 0;
+  padding: var(--space-lg);
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--color-texture-ink);
+  opacity: 0.06;
+  white-space: pre;
+  user-select: none;
+  pointer-events: none;
+  /* Negative, scoped to the stacking context .hero establishes (see
+     Hero.css) — needed because an absolutely positioned z-index:0 element
+     would otherwise paint ABOVE normal in-flow text, not behind it. */
+  z-index: -1;
+}
+
+.hero-code-texture__copy {
+  flex-shrink: 0;
+  margin: 0;
+}
+
+/* Below this width the 780px text column occupies most/all of the section,
+   so there's no reliable empty margin to push density into — stay at the
+   single safe density everywhere rather than risk the dense band landing
+   under text on a narrower desktop window. */
+@media (min-width: 1024px) {
+  .hero-code-texture {
+    /* Peak density in the real margins outside the text column. */
+    opacity: 0.18;
+    /* The text column is centered, max-width 780px (see --content-max-width
+       in theme.css). At this query's own 1024px floor that leaves >=11.9%
+       margin on each side, growing as the viewport widens — so a fixed 10%
+       "fade complete by" point is inside that margin at every width this
+       query applies to, never under the column itself. Values are alpha
+       multipliers on the 18% base: 1 -> 18% (peak), 0.333 -> 6% (safe). */
+    mask-image: linear-gradient(
+      to right,
+      black 0%,
+      black 4%,
+      rgba(0, 0, 0, 0.333) 10%,
+      rgba(0, 0, 0, 0.333) 90%,
+      black 96%,
+      black 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      black 0%,
+      black 4%,
+      rgba(0, 0, 0, 0.333) 10%,
+      rgba(0, 0, 0, 0.333) 90%,
+      black 96%,
+      black 100%
+    );
+  }
+}

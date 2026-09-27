@@ -1,0 +1,140 @@
+.command-palette-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  padding: 12vh var(--space-xs) var(--space-xs);
+  background: var(--scrim);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.command-palette-overlay[data-entered="true"] {
+  opacity: 1;
+}
+
+.command-palette {
+  width: 100%;
+  max-width: 480px;
+  max-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-modal);
+  transform: scale(0.97) translateY(-6px);
+  transition: transform var(--transition-fast);
+}
+
+.command-palette-overlay[data-entered="true"] .command-palette {
+  transform: scale(1) translateY(0);
+}
+
+.command-palette__field {
+  display: flex;
+  align-items: center;
+  border-bottom: var(--border-width) solid var(--color-border);
+  padding-left: var(--space-md);
+  transition: border-color var(--transition-fast);
+}
+
+.command-palette__field:focus-within {
+  /* The input is auto-focused the moment this dialog opens, so a
+     permanently-on default ring would just be noise. A border-color change
+     on the field itself still gives keyboard users a visible focus cue. */
+  border-bottom-color: var(--color-accent);
+}
+
+.command-palette__caret {
+  flex-shrink: 0;
+  width: 2px;
+  height: 1.1em;
+  background: var(--color-accent);
+  margin-right: 2px;
+  animation: command-palette-blink 1s step-end infinite;
+}
+
+.command-palette__caret[data-visible="false"] {
+  visibility: hidden;
+}
+
+@keyframes command-palette-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.command-palette__input {
+  width: 100%;
+  border: none;
+  border-radius: 0;
+  background: none;
+  padding: var(--space-sm) var(--space-md) var(--space-sm) 0;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text);
+}
+
+.command-palette__input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.command-palette__input:focus-visible {
+  outline: none;
+}
+
+.command-palette__list {
+  overflow-y: auto;
+  padding: var(--space-2xs);
+}
+
+.command-palette__group {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  padding: var(--space-xs) var(--space-xs) var(--space-3xs);
+}
+
+.command-palette__item {
+  padding: var(--space-2xs) var(--space-xs);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.command-palette__item[data-active="true"] {
+  background: var(--color-surface-hover);
+  color: var(--color-accent);
+}
+
+.command-palette__empty {
+  padding: var(--space-sm) var(--space-xs);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .command-palette-overlay {
+    opacity: 1;
+  }
+
+  .command-palette {
+    transform: none;
+  }
+
+  .command-palette__caret {
+    /* Steady, not hidden — still marks where typing starts, just doesn't blink. */
+    animation: none;
+    opacity: 1;
+  }
+}

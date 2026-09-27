@@ -1,0 +1,25 @@
+.about__grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+.about__bio {
+  font-size: var(--text-base);
+  color: var(--color-text);
+}
+
+.about__stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  align-content: flex-start;
+}
+
+@media (max-width: 640px) {
+  .about__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+}

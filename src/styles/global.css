@@ -1,0 +1,192 @@
+/*
+  GLOBAL — resets, base element styles, and small layout utilities shared by
+  every section. This file reads values from theme.css but doesn't define
+  new colors/fonts/spacing of its own. If something here looks wrong,
+  the fix is almost always in theme.css, not here.
+*/
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  /* Safety net: nothing on the page is meant to be wider than the
+     viewport (the carousel contains its own horizontal scroll — see
+     SelectedWork.css), so this should never actually engage. It's here so
+     that if anything ever does overflow, it clips instead of adding a
+     page-level horizontal scrollbar. */
+  overflow-x: hidden;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  line-height: var(--leading-tight);
+  margin: 0;
+  font-weight: 600;
+}
+
+p {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Visible keyboard focus everywhere. Never remove this without replacing
+   it with something equally visible — mouse users can see a hover state,
+   keyboard users can only see this. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Skip link: hidden until focused, lets keyboard users jump past the nav */
+.skip-link {
+  position: absolute;
+  left: var(--space-xs);
+  top: -100px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: var(--border-width) solid var(--color-border-strong);
+  padding: var(--space-3xs) var(--space-xs);
+  border-radius: var(--radius-sm);
+  z-index: 100;
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus-visible {
+  top: var(--space-xs);
+}
+
+/* Visually hidden but still readable by screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------------------------- layout utilities ---------------------------- */
+
+.container {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+.section {
+  padding-block: var(--space-xl);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.section:last-of-type {
+  border-bottom: none;
+}
+
+.section-heading {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-md);
+}
+
+.section-kicker {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-2xs);
+}
+
+/* ----------------------------- shared controls ----------------------------- */
+
+/* Bordered link/button style used throughout the site. Deliberately not a
+   filled pill — a border + underline that responds on hover/focus. Applied
+   to both <a> and <button> elements, so cursor is explicit rather than
+   relying on the (inconsistent across browsers) UA default for <button>. */
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3xs);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  text-decoration: none;
+  padding: var(--space-2xs) var(--space-xs);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.button:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-text);
+}
+
+/* The one place the accent color marks a primary action (currently the
+   hero's "Email me" button) — still an outline, never a solid fill, per
+   the no-filled-pill rule above. */
+.button--accent {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.button--accent:hover {
+  background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+
+.text-link {
+  color: var(--color-text);
+  text-underline-offset: 3px;
+  text-decoration-color: var(--color-border-strong);
+  transition: text-decoration-color var(--transition-fast);
+}
+
+.text-link:hover {
+  text-decoration-color: var(--color-text);
+}
+
+.tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2xs);
+}

@@ -1,0 +1,12 @@
+.footer {
+  padding-block: var(--space-sm);
+}
+
+.footer__inner {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
